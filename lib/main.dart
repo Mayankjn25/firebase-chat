@@ -1,8 +1,24 @@
+import 'package:firebase_chat/models/user_data.dart';
+import 'package:firebase_chat/screens/home_screen.dart';
+import 'package:firebase_chat/screens/login_screen.dart';
+import 'package:firebase_chat/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    const MyApp(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => UserData(),
+        ),
+        Provider<AuthService>(
+          create: (_) => AuthService(),
+        ),
+      ],
+      child: const MyApp(),
+    ),
   );
 }
 
@@ -14,7 +30,20 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Firebase Chat',
       theme: ThemeData(primaryColor: Colors.white),
-      home: Container(),
+      home: StreamBuilder<auth.User?>(
+        stream: Provider.of<AuthService>(
+          context,
+        ).user,
+        builder: (context, AsyncSnapshot<auth.User?> snapshot) {
+          if (snapshot.hasData || snapshot.data?.uid != null) {
+            Provider.of<UserData>(context, listen: false).currentUserId =
+                snapshot.data?.uid;
+            return HomeScreen();
+          } else {
+            return LoginScreen();
+          }
+        },
+      ),
     );
   }
 }
