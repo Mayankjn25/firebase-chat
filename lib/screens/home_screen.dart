@@ -1,4 +1,7 @@
+import 'package:firebase_chat/screens/search_users_screen.dart';
+import 'package:firebase_chat/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -12,7 +15,22 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.exit_to_app),
+          onPressed: Provider.of<AuthService>(context, listen: false).logout,
+        ),
         title: const Text('Chats'),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => SearchUsersScreen(),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
