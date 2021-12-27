@@ -39,7 +39,7 @@ class _SearchUsersScreenState extends State<SearchUsersScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (_) => CreateChatScreen(
-                      //selectedUsers: _selectedUsers,
+                      selectedUsers: _selectedUsers,
                     ),
                   ),
                 );
